@@ -4,7 +4,7 @@
 </p>
 <p align="center">
   <a href="https://typeorm.io/#/" target="blank"><img src="https://github.com/typeorm/typeorm/raw/master/resources/logo_big.png" width="250" alt="TypeORM Logo" /></a>
-  <a href="https://reactjs.org/" target="blank"><img src="https://handlebarsjs.com/images/handlebars_logo.png" width="150" alt="Handlebars Logo" /></a>
+  <a href="https://handlebarsjs.com/" target="blank"><img src="https://i0.wp.com/blog.fossasia.org/wp-content/uploads/2017/07/handlebars-js.png" width="150" alt="Handlebars Logo" /></a>
 </p>
 
 [travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
