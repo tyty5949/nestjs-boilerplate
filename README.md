@@ -20,8 +20,36 @@
   <a href='https://coveralls.io/github/tyty5949/nestjs-boilerplate?branch=master'><img src='https://coveralls.io/repos/github/tyty5949/nestjs-boilerplate/badge.svg?branch=master' alt='Coverage Status' /></a>
 </p>
 
-## Description
+## Table of Contents
 
+<!--ts-->
+
+- [Getting Setup](#getting-setup)
+- [TypeORM & Database](#typeorm-and-database)
+
+<!--te-->
+
+## Getting Setup
+
+### Required software
+
+#### 1. Docker
+
+https://www.docker.com/products/docker-desktop
+
+> Docker is used to run a database locally for local development and testing.
+
+## TypeORM and Database
+
+This boilerplate takes advantage of NestJS's integration with TypeORM. More information can be found [here](https://docs.nestjs.com/techniques/database#typeorm-integration).
+
+### Useful Commands
+
+- `**npm run db:up**` - Starts the local MySQL database instance using Docker.
+- `**npm run db:stop**` - Stops the local MySQL database instance using Docker.
+- `**npm run migrate:up` - Runs pending migrations on your local database. See more info [here](https://typeorm.io/#/migrations).
+- `**npm run migrate:revert` - Reverts the most recently applied migration on your local database. See more info [here](https://typeorm.io/#/migrations).
+- `**npm run typeorm migration:create -- -n <YourMigrationNameHere>**` - Creates a new migration within the configured migrations folder. See more info [here](https://typeorm.io/#/migrations/creating-a-new-migration).
 
 ## Stay in touch
 
