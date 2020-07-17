@@ -25,7 +25,9 @@ export class UserService {
 
   async create(email: string, password: string): Promise<InsertResult> {
     const lowerCaseEmail = email.toLowerCase();
-    const hashedPassword = await bcypt.hash(password, 10);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+    const hashedPassword = (await bcypt.hash(password, 10)) as string;
 
     const userToRegister: Partial<User> = {
       email: lowerCaseEmail,
