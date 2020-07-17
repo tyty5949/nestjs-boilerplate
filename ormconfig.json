@@ -1,7 +1,0 @@
-{
-  "migrationsTableName": "migrations",
-  "migrations": ["dist/server/migrations/*.js"],
-  "cli": {
-    "migrationsDir": "server/migrations"
-  }
-}

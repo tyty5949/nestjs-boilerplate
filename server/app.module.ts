@@ -1,17 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { DatabaseModule } from './database.module';
+import { UserModule } from './domain/user/user.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forRoot({
-      // NOTE: Most configuration is done using environment variables
-      // @see https://typeorm.io/#/using-ormconfig/using-environment-variables
-      entities: ['domain/**/*.entity.js'],
-    }),
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [DatabaseModule, UserModule],
 })
 export class AppModule {}
