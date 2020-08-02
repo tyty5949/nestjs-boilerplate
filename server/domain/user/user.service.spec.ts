@@ -1,8 +1,8 @@
 import { User } from './user.entity';
 import { UserService } from './user.service';
-import { Logger } from '@nestjs/common';
 import { getMockUser } from '../../__tests__/__mocks__/user';
 import { UserRepository } from './user.repository';
+import { getLogger } from '../common/logger';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -12,7 +12,7 @@ describe('UserService', () => {
   beforeEach(() => {
     mockUserRepository = getMockUserRepository();
     userService = new UserService(
-      new Logger(),
+      getLogger(),
       mockUserRepository as UserRepository,
     );
   });
@@ -106,13 +106,13 @@ describe('UserService', () => {
     });
   });
 
-  describe('#toHistoryJSON()', () => {
-    it('should exclude passwordHash in history json', async () => {
+  describe('#toHistoryObject()', () => {
+    it('should exclude passwordHash in history object', async () => {
       const user = await userService.toUser({
         passwordHash:
           '$2b$10$a5kfUlACNsuMYt8dH98F5OkT/XiB2SYbwsBk7ocBG.Gjtb.XbtVzq',
       });
-      const json = userService.getHistoryJSON(user);
+      const json = JSON.stringify(userService.getHistoryObject(user));
       expect(json).not.toContain('passwordHash');
       expect(json).not.toContain('password_hash');
     });
@@ -122,7 +122,7 @@ describe('UserService', () => {
         id: 1234,
         test: 'this_is_a_test',
       });
-      const json = userService.getHistoryJSON(user);
+      const json = JSON.stringify(userService.getHistoryObject(user));
       expect(json).toContain('id');
       expect(json).not.toContain('test');
       expect(json).not.toContain('this_is_a_test');

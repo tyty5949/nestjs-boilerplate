@@ -1,9 +1,10 @@
 import { AuthApiController } from './auth.api-controller';
-import { InternalServerErrorException, Logger } from '@nestjs/common';
+import { InternalServerErrorException } from '@nestjs/common';
 import { Response } from 'express';
 import { RegisterDTO } from './models/register.dto';
 import { PassportRequest } from '../common/interfaces/passportRequest.interface';
 import { UserService } from '../user/user.service';
+import { getLogger } from '../common/logger';
 
 describe('AuthApiController', () => {
   let authApiController: AuthApiController;
@@ -14,12 +15,12 @@ describe('AuthApiController', () => {
 
   beforeEach(() => {
     mockUserService = {
-      getHistoryJSON: () => {
-        return '';
+      getHistoryObject: () => {
+        return {}; 
       },
     } as Partial<UserService>;
     authApiController = new AuthApiController(
-      new Logger(),
+      getLogger(),
       mockUserService as UserService,
     );
 

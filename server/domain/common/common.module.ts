@@ -1,4 +1,5 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { Logger } from './logger';
 
 /**
  * Provides common providers and exports for use in most models. Simply use

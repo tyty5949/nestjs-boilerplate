@@ -1,17 +1,18 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcypt from 'bcrypt';
 import { validate } from 'class-validator';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { plainToClass, serialize } from 'class-transformer';
+import { classToPlain, plainToClass } from 'class-transformer';
 import { Constants } from '../../utils/constants';
+import { Logger } from '../common/logger';
 
 @Injectable()
 export class UserService {
   constructor(private logger: Logger, private userRepository: UserRepository) {}
 
-  getHistoryJSON(user: Partial<User>): string {
-    return serialize(user, { excludeExtraneousValues: true });
+  getHistoryObject(user: Partial<User>): Record<string, unknown> {
+    return classToPlain(user, { excludeExtraneousValues: true });
   }
 
   async toUser(value: Record<string, unknown>): Promise<User> {
@@ -49,10 +50,9 @@ export class UserService {
 
     return this.userRepository.insert(userToRegister).then(async (result) => {
       if (!result.identifiers.length) {
-        Logger.error(
+        this.logger.error(
           'Failed to persist new user to database (no identifiers returned)',
-          null,
-          JSON.stringify({ user: this.getHistoryJSON(userToRegister), result }),
+          { user: this.getHistoryObject(userToRegister), result },
         );
         return undefined;
       }
@@ -67,10 +67,10 @@ export class UserService {
       } catch (err) {
         // If there was an error converting the returned generated maps into
         // a user
-        Logger.error(
+        this.logger.error(
           'Failed to create user from generated map!',
+          { user: this.getHistoryObject(userToRegister), result },
           err,
-          JSON.stringify({ user: this.getHistoryJSON(userToRegister), result }),
         );
         return undefined;
       }

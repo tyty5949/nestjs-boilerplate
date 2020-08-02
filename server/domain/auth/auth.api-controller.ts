@@ -3,7 +3,6 @@ import {
   Controller,
   Get,
   InternalServerErrorException,
-  Logger,
   Post,
   Req,
   Request,
@@ -17,6 +16,7 @@ import { PassportRequest } from '../common/interfaces/passportRequest.interface'
 import { AuthMeResponse } from './interfaces/authMeResponse.interface';
 import { UserService } from '../user/user.service';
 import { RegisterDTO } from './models/register.dto';
+import { Logger } from '../common/logger';
 
 @Controller('/api/auth')
 export class AuthApiController {
@@ -68,19 +68,18 @@ export class AuthApiController {
     );
 
     if (!user) {
-      Logger.error(
+      this.logger.error(
         'Error registering user (user is null)',
-        JSON.stringify({ email: registerDto.email }),
+        { email: registerDto.email },
       );
       throw new InternalServerErrorException();
     }
 
     req.logIn(user, (err) => {
       if (err) {
-        Logger.error(
+        this.logger.error(
           'Error logging user in after registration',
-          null,
-          this.userService.getHistoryJSON(user),
+          { user: this.userService.getHistoryObject(user) },
         );
         throw new InternalServerErrorException();
       }
