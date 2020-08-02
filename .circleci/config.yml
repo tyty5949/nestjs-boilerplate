@@ -3,7 +3,13 @@ jobs:
   build:
     docker:
       - image: 'circleci/node:latest'
+
       - image: 'circleci/mariadb:latest'
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: datastore
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
     steps:
       - checkout
       - run: npm install
