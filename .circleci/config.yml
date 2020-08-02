@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  coveralls: coveralls/coveralls@1.0.6
 jobs:
   build:
     docker:
@@ -19,3 +21,4 @@ jobs:
       - run: npm run test:cov
       - store_test_results:
           path: coverage
+      - coveralls/upload
