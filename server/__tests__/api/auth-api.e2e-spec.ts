@@ -42,26 +42,59 @@ describe('AuthController (e2e)', () => {
     });
   });
 
-  it('/api/auth/logout (POST)', async () => {
-    await authenticateAgent(agent, 'test@qa.com', 'password');
+  describe('/api/auth/logout (POST)', () => {
+    it('should logout logged in user', async () => {
+      await authenticateAgent(agent, 'test@qa.com', 'password');
 
-    await agent
-      .post('/api/auth/logout')
-      .expect(302, 'Found. Redirecting to /login')
-      .expect('location', '/login');
+      await agent
+        .post('/api/auth/logout')
+        .expect(302, 'Found. Redirecting to /login')
+        .expect('location', '/login');
 
-    await agent
-      .get('/api/auth/me')
-      .expect(403)
-      .expect(
-        `{"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}`,
-      );
+      await agent
+        .get('/api/auth/me')
+        .expect(403)
+        .expect(
+          `{"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}`,
+        );
+    });
   });
 
-  it('/api/auth/me (GET)', async () => {
-    await authenticateAgent(agent, 'test@qa.com', 'password');
+  describe('/api/auth/me (GET)', () => {
+    it('should return info about logged in user', async () => {
+      await authenticateAgent(agent, 'test@qa.com', 'password');
 
-    await agent.get('/api/auth/me').expect('Content-Type', /json/).expect(200);
+      await agent.get('/api/auth/me').expect(200).expect('Content-Type', /json/);
+    });
+  });
+
+  describe('/api/auth/register (POST)', () => {
+    it('should redirect if already logged in', async () => {
+      await authenticateAgent(agent, 'test@qa.com', 'password');
+
+      await agent
+        .post('/api/auth/register')
+        .send({})
+        .expect(302, 'Found. Redirecting to /app/home')
+        .expect('location', '/app/home');
+    });
+
+    it('should register and login new user', async () => {
+      await agent
+        .post('/api/auth/register')
+        .send({ email: 'register_user@qa.com', password: 'password' })
+        .expect(302, 'Found. Redirecting to /app/home')
+        .expect('location', '/app/home')
+        .expect('set-cookie', /user_session=/);
+
+      await agent
+        .get('/api/auth/me')
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .then((res) => {
+          expect(res.body).toMatchObject({ email: 'register_user@qa.com' });
+        });
+    });
   });
 });
 
