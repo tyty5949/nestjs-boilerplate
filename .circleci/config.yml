@@ -6,6 +6,7 @@ jobs:
       - image: 'circleci/mariadb:latest'
     steps:
       - checkout
+      - run: npm install
       - run: npm run lint
       - run: npm run build
       - run: npm run test:cov
