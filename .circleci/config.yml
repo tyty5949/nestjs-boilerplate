@@ -17,4 +17,6 @@ jobs:
       - run: npm run build
       - run: npm run migrate:up
       - run: npm run test:cov
+      - store_test_results:
+          path: coverage
       - run: bundle exec rspec spec
