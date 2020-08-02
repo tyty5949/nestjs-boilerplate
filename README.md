@@ -12,7 +12,7 @@
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
 
-<p align="center">Yet another full-stack Nest.js boilerplate repo but this time with TypeORM, Passport Authentication, Handlebars, and React!</p>
+<p align="center">Yet another full-stack Nest.js boilerplate repo but this time with TypeORM, Passport authentication, Handlebars, and React!</p>
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/tyty5949/nestjs-boilerplate" alt="Package License" /></a>
   <a href='https://coveralls.io/github/tyty5949/nestjs-boilerplate?branch=master'><img src='https://coveralls.io/repos/github/tyty5949/nestjs-boilerplate/badge.svg?branch=master' alt='Coverage Status' /></a>
@@ -24,7 +24,13 @@
 <!--ts-->
 
 - [Getting Setup](#getting-setup)
+  - [Required software](#required-software)
+  - [Running for the first time](#running-for-the-first-time)
 - [TypeORM & Database](#typeorm-and-database)
+- [Useful Commands](#useful-commands)
+  - [Database](#database)
+- [Stay in touch](#stay-in-touch)
+- [License](#license)
 
 <!--te-->
 
@@ -38,17 +44,52 @@ https://www.docker.com/products/docker-desktop
 
 > Docker is used to run a database locally for local development and testing.
 
+
+#### 2. Node Version Manager (optional)
+
+```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+```
+or
+```bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+```
+
+https://github.com/nvm-sh/nvm
+
+#### 3. Node v12
+
+If you're using `nvm`, then simply run:
+```bash
+nvm install v12
+```
+
+Otherwise, see [here](https://nodejs.org/en/download/).
+
+### Running for the first time
+
+Run the following commands in the cloned repo's directory to quickly get started and run tests.
+
+```bash
+npm install
+npm run db:up
+npm run migrate:up
+npm run build
+npm run test
+```
+
 ## TypeORM and Database
 
 This boilerplate takes advantage of NestJS's integration with TypeORM. More information can be found [here](https://docs.nestjs.com/techniques/database#typeorm-integration).
 
 ### Useful Commands
 
-- `**npm run db:up**` - Starts the local MySQL database instance using Docker.
-- `**npm run db:stop**` - Stops the local MySQL database instance using Docker.
-- `**npm run migrate:up` - Runs pending migrations on your local database. See more info [here](https://typeorm.io/#/migrations).
-- `**npm run migrate:revert` - Reverts the most recently applied migration on your local database. See more info [here](https://typeorm.io/#/migrations).
-- `**npm run typeorm migration:create -- -n <YourMigrationNameHere>**` - Creates a new migration within the configured migrations folder. See more info [here](https://typeorm.io/#/migrations/creating-a-new-migration).
+#### Database
+- `npm run db:up` - Starts the local MySQL database instance using Docker.
+- `npm run db:stop` - Stops the local MySQL database instance using Docker.
+- `npm run migrate:up` - Runs pending migrations on your local database. See more info [here](https://typeorm.io/#/migrations).
+- `npm run migrate:revert` - Reverts the most recently applied migration on your local database. See more info [here](https://typeorm.io/#/migrations).
+- `npm run typeorm migration:create -- -n <YourMigrationNameHere>**` - Creates a new migration within the configured migrations folder. See more info [here](https://typeorm.io/#/migrations/creating-a-new-migration).
 
 ## Stay in touch
 
