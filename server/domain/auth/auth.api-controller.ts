@@ -71,7 +71,7 @@ export class AuthApiController {
       throw new InternalServerErrorException('Error registering user!');
     }
 
-    req.logIn(user, err => {
+    req.logIn(user, (err) => {
       if (err) {
         throw new InternalServerErrorException(
           'Error logging user in after registration!',

@@ -4,4 +4,4 @@ export type UserHistoryObject = {
   email: string;
   updatedAt: Date;
   deletedAt: Date;
-}
+};

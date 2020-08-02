@@ -1,0 +1,21 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: 'circleci/node:latest'
+
+      - image: 'circleci/mariadb:latest'
+        environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: datastore
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run migrate:up
+      - run: npm run test:cov
+      - store_test_results:
+          path: coverage

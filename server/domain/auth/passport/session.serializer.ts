@@ -10,7 +10,10 @@ export class SessionSerializer extends PassportSerializer {
    * cached within the user's session.
    * NOTE: This is written to the sessions table under the json column
    */
-  serializeUser(user: User, done: (err: Error, user: SessionUser) => void): any {
+  serializeUser(
+    user: User,
+    done: (err: Error, user: SessionUser) => void,
+  ): any {
     done(null, { id: user.id, accountId: user.accountId, email: user.email });
   }
 

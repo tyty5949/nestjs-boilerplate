@@ -3,7 +3,6 @@ import { UserService } from './user.service';
 import { Logger } from '@nestjs/common';
 import { getMockUser } from '../../__tests__/__mocks__/user';
 
-
 describe('UserService', () => {
   let userService: UserService;
   let savedUser: User;
@@ -16,17 +15,20 @@ describe('UserService', () => {
 
   describe('#registerUser()', () => {
     it('should register user with given email', async () => {
-      const registeredUser = await userService.registerUser('test@qa.com', 'password');
+      const registeredUser = await userService.registerUser(
+        'test@qa.com',
+        'password',
+      );
 
-      expect(registeredUser).toMatchObject({email: 'test@qa.com'} );
-      expect(savedUser).toMatchObject({email: 'test@qa.com'});
+      expect(registeredUser).toMatchObject({ email: 'test@qa.com' });
+      expect(savedUser).toMatchObject({ email: 'test@qa.com' });
     });
   });
 
   const getMockUserRepository = () => {
     return {
       connection: null,
-      insert: jest.fn().mockImplementation(user => {
+      insert: jest.fn().mockImplementation((user) => {
         savedUser = getMockUser(user);
         return Promise.resolve({
           identifiers: ['1234'],
@@ -34,5 +36,5 @@ describe('UserService', () => {
         });
       }),
     };
-  }
-})
+  };
+});
