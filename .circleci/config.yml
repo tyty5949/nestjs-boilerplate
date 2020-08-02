@@ -13,8 +13,8 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run migrate:up
       - run: npm run lint
       - run: npm run build
+      - run: npm run migrate:up
       - run: npm run test:cov
       - run: bundle exec rspec spec
