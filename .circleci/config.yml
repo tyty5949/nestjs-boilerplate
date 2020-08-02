@@ -5,7 +5,6 @@ jobs:
   build:
     docker:
       - image: 'circleci/node:latest'
-
       - image: 'circleci/mariadb:latest'
         environment:
           MYSQL_ROOT_PASSWORD: root
