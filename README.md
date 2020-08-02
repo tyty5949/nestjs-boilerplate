@@ -4,7 +4,7 @@
 </p>
 <p align="center" display="inline-block" vertical-align="middle">
   <a href="https://typeorm.io/#/" target="blank"><img src="https://github.com/typeorm/typeorm/raw/master/resources/logo_big.png" width="250" alt="TypeORM Logo" /></a>
-  <a href="https://handlebarsjs.com/" target="blank"><img src="https://i0.wp.com/blog.fossasia.org/wp-content/uploads/2017/07/handlebars-js.png" width="200" alt="Handlebars Logo" /></a>
+  <a href="https://handlebarsjs.com/" target="blank"><img src="https://i0.wp.com/blog.fossasia.org/wp-content/uploads/2017/07/handlebars-js.png" width="120" alt="Handlebars Logo" /></a>
 </p>
 
 [travis-image]: https://api.travis-ci.org/nestjs/nest.svg?branch=master
@@ -16,7 +16,7 @@
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/tyty5949/nestjs-boilerplate" alt="Package License" /></a>
   <a href='https://coveralls.io/github/tyty5949/nestjs-boilerplate?branch=master'><img src='https://coveralls.io/repos/github/tyty5949/nestjs-boilerplate/badge.svg?branch=master' alt='Coverage Status' /></a>
-  <a href=''><img src="https://circleci.com/gh/tyty5949/nestjs-boilerplate.svg?style=shield" alt="CircleCI" /></a>
+  <a href='https://circleci.com/gh/tyty5949/nestjs-boilerplate'><img src="https://circleci.com/gh/tyty5949/nestjs-boilerplate.svg?style=shield" alt="CircleCI" /></a>
 </p>
 
 ## Table of Contents
