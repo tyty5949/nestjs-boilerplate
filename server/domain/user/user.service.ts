@@ -9,7 +9,7 @@ import { plainToClass, serialize } from 'class-transformer';
 export class UserService {
   constructor(private logger: Logger, private userRepository: UserRepository) {}
 
-  getHistoryJSON(user: User): string {
+  getHistoryJSON(user: Partial<User>): string {
     return serialize(user, { excludeExtraneousValues: true });
   }
 
@@ -42,9 +42,12 @@ export class UserService {
 
     return this.userRepository.insert(userToRegister).then(async (result) => {
       if (result.identifiers.length === 0) {
-        throw new Error(
-          'Failed to persist new user to database! (no identifiers returned)',
+        Logger.error(
+          'Failed to persist new user to database (no identifiers returned)',
+          null,
+          JSON.stringify({ user: this.getHistoryJSON(userToRegister), result }),
         );
+        return undefined;
       }
 
       let user: User;
@@ -60,7 +63,7 @@ export class UserService {
         Logger.error(
           'Failed to create user from generated map!',
           err,
-          JSON.stringify({ userToRegister, result }),
+          JSON.stringify({ user: this.getHistoryJSON(userToRegister), result }),
         );
         return undefined;
       }

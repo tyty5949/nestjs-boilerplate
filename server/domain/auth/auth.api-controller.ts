@@ -28,7 +28,7 @@ export class AuthApiController {
     const user = req.user;
 
     if (!user) {
-      this.logger.error('Authenticated request has no user!');
+      this.logger.error('Authenticated request has no user');
       throw new InternalServerErrorException();
     }
 
@@ -40,7 +40,7 @@ export class AuthApiController {
 
   @UseGuards(LoginGuard)
   @Post('/login')
-  login(@Req() req: PassportRequest, @Res() res: Response): void {
+  login(@Res() res: Response): void {
     res.redirect('/app/home');
   }
 
@@ -68,14 +68,21 @@ export class AuthApiController {
     );
 
     if (!user) {
-      throw new InternalServerErrorException('Error registering user!');
+      Logger.error(
+        'Error registering user (user is null)',
+        JSON.stringify({ email: registerDto.email }),
+      );
+      throw new InternalServerErrorException();
     }
 
     req.logIn(user, (err) => {
       if (err) {
-        throw new InternalServerErrorException(
-          'Error logging user in after registration!',
+        Logger.error(
+          'Error logging user in after registration',
+          null,
+          this.userService.getHistoryJSON(user),
         );
+        throw new InternalServerErrorException();
       }
 
       res.redirect('/app/home');
