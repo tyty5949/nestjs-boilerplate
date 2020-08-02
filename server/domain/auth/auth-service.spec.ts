@@ -69,7 +69,7 @@ describe('AuthService', () => {
 });
 
 const getMockUserRepository = (mockUser: User) => ({
-  findOneByEmail: jest.fn().mockImplementation(email => {
+  findOneByEmail: jest.fn().mockImplementation((email) => {
     if (email === mockUser.email) {
       return Promise.resolve(mockUser);
     }

@@ -10,22 +10,19 @@ import { INestApplication } from '@nestjs/common';
 
 if (process.env.NODE_ENV !== 'production') {
   // dotenv doesn't have types :\
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-var-requires
   require('dotenv').config();
 }
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { getConnection, getRepository } from 'typeorm';
+import { getRepository } from 'typeorm';
 import { TypeormStore } from 'connect-typeorm';
 import * as passport from 'passport';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
 import { Session } from './domain/auth/entities/session.entity';
 
-const applyNestApplicationMiddleware = (
-  app: INestApplication,
-): void => {
-
+const applyNestApplicationMiddleware = (app: INestApplication): void => {
   // Must come before other calls to app.use() or setup functions that may call app.use()
   // @see https://docs.nestjs.com/techniques/security#helmet
   app.use(helmet());
@@ -61,7 +58,7 @@ const applyNestApplicationMiddleware = (
   // Initialize passport for handling auth within our nestjs app
   app.use(passport.initialize());
   app.use(passport.session());
-}
+};
 
 const bootstrap = async (): Promise<INestApplication> => {
   const app = await NestFactory.create(AppModule);
