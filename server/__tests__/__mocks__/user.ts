@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import { User } from '../../domain/user/user.entity';
+import { Constants } from '../../utils/constants';
 
 /**
  * Generates an active mock user for use in testing.
@@ -18,7 +19,7 @@ export const getMockUser = (
     accountId: '84ce7035-7f2d-4b6e-979e-f1abd4962b55',
     email: 'test@qa.com',
     passwordHash: Buffer.alloc(
-      60,
+      Constants.auth.hashedPasswordLength,
       '$2b$10$a5kfUlACNsuMYt8dH98F5OkT/XiB2SYbwsBk7ocBG.Gjtb.XbtVzq',
     ),
     createdAt: new Date(),
@@ -29,10 +30,16 @@ export const getMockUser = (
   const user = Object.assign(mockUser, partial);
 
   if (partial.password) {
-    // bcrypt has no types :\
+    // Bcrypt has no types :\
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-    const hashedPassword = bcrypt.hashSync(partial.password, 10) as string;
-    user.passwordHash = Buffer.alloc(60, hashedPassword);
+    const hashedPassword = bcrypt.hashSync(
+      partial.password,
+      Constants.auth.passwordSaltLength,
+    ) as string;
+    user.passwordHash = Buffer.alloc(
+      Constants.auth.hashedPasswordLength,
+      hashedPassword,
+    );
     delete user.password;
   }
 

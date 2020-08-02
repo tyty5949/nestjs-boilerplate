@@ -1,11 +1,11 @@
 import {
-  Entity,
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Generated,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  DeleteDateColumn,
-  Generated,
-  CreateDateColumn,
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 

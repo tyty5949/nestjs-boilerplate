@@ -6,6 +6,7 @@ import {
   createTestingNestApplication,
 } from '../utils';
 import { getConnection } from 'typeorm';
+import { Constants } from '../../utils/constants';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -29,7 +30,10 @@ describe('AuthController (e2e)', () => {
       await agent
         .post('/api/auth/login')
         .send({ email: 'test@qa.com', password: 'password' })
-        .expect(302, 'Found. Redirecting to /app/home')
+        .expect(
+          Constants.http.HTTP_STATUS_FOUND,
+          'Found. Redirecting to /app/home',
+        )
         .expect('location', '/app/home')
         .expect('set-cookie', /user_session=/);
     });
@@ -38,7 +42,10 @@ describe('AuthController (e2e)', () => {
       await agent
         .post('/api/auth/login')
         .send({ email: 'test@qa.com', password: 'wrong_password' })
-        .expect(401, `{"statusCode":401,"message":"Unauthorized"}`);
+        .expect(
+          Constants.http.HTTP_STATUS_UNAUTHORIZED,
+          '{"statusCode":401,"message":"Unauthorized"}',
+        );
     });
   });
 
@@ -48,14 +55,17 @@ describe('AuthController (e2e)', () => {
 
       await agent
         .post('/api/auth/logout')
-        .expect(302, 'Found. Redirecting to /login')
+        .expect(
+          Constants.http.HTTP_STATUS_FOUND,
+          'Found. Redirecting to /login',
+        )
         .expect('location', '/login');
 
       await agent
         .get('/api/auth/me')
-        .expect(403)
+        .expect(Constants.http.HTTP_STATUS_FORBIDDEN)
         .expect(
-          `{"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}`,
+          '{"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}',
         );
     });
   });
@@ -64,7 +74,10 @@ describe('AuthController (e2e)', () => {
     it('should return info about logged in user', async () => {
       await authenticateAgent(agent, 'test@qa.com', 'password');
 
-      await agent.get('/api/auth/me').expect(200).expect('Content-Type', /json/);
+      await agent
+        .get('/api/auth/me')
+        .expect(Constants.http.HTTP_STATUS_OK)
+        .expect('Content-Type', /json/);
     });
   });
 
@@ -75,7 +88,10 @@ describe('AuthController (e2e)', () => {
       await agent
         .post('/api/auth/register')
         .send({})
-        .expect(302, 'Found. Redirecting to /app/home')
+        .expect(
+          Constants.http.HTTP_STATUS_FOUND,
+          'Found. Redirecting to /app/home',
+        )
         .expect('location', '/app/home');
     });
 
@@ -83,13 +99,16 @@ describe('AuthController (e2e)', () => {
       await agent
         .post('/api/auth/register')
         .send({ email: 'register_user@qa.com', password: 'password' })
-        .expect(302, 'Found. Redirecting to /app/home')
+        .expect(
+          Constants.http.HTTP_STATUS_FOUND,
+          'Found. Redirecting to /app/home',
+        )
         .expect('location', '/app/home')
         .expect('set-cookie', /user_session=/);
 
       await agent
         .get('/api/auth/me')
-        .expect(200)
+        .expect(Constants.http.HTTP_STATUS_OK)
         .expect('Content-Type', /json/)
         .then((res) => {
           expect(res.body).toMatchObject({ email: 'register_user@qa.com' });

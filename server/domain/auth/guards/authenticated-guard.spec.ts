@@ -27,7 +27,9 @@ const getMockExecutionContext = (
       return {
         getRequest: () => {
           return {
-            isAuthenticated: () => isAuthenticated,
+            isAuthenticated: () => {
+              return isAuthenticated;
+            },
           };
         },
       };

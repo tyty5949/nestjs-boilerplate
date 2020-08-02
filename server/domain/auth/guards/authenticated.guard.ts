@@ -1,4 +1,4 @@
-import { ExecutionContext, Injectable, CanActivate } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { PassportRequest } from '../../common/interfaces/passportRequest.interface';
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DynamicModule } from '@nestjs/common';
 
-export const makeDatabaseModule = (): DynamicModule =>
-  TypeOrmModule.forRoot({
+export const makeDatabaseModule = (): DynamicModule => {
+  return TypeOrmModule.forRoot({
     // NOTE: Most configuration is done using environment variables
     // @see https://typeorm.io/#/using-ormconfig/using-environment-variables
     type: 'mariadb',
@@ -14,6 +14,7 @@ export const makeDatabaseModule = (): DynamicModule =>
     // NOTE: Since auto-load is enabled, ALL entities will need to be registered
     // in module imports whether or not their entity managers/repositories
     // are actually used...
-    //autoLoadEntities: true,
+    // autoLoadEntities: true,
     entities: ['**/*.entity.{ts,js}'],
   });
+};

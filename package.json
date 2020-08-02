@@ -16,6 +16,7 @@
     "start:prod": "node dist/server/main",
     "prebuild": "rimraf dist coverage",
     "build": "nest build",
+    "lint:fix": "eslint \"server/**/*.ts\" --fix",
     "lint": "eslint \"server/**/*.ts\"",
     "prettier": "prettier --write \"server/**/*.ts\"",
     "test": "jest",

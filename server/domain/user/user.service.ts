@@ -4,6 +4,7 @@ import { validate } from 'class-validator';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { plainToClass, serialize } from 'class-transformer';
+import { Constants } from '../../utils/constants';
 
 @Injectable()
 export class UserService {
@@ -19,8 +20,8 @@ export class UserService {
       enableImplicitConversion: true,
     });
     const errors = await validate(object);
-    if (errors.length > 0) {
-      throw errors[0];
+    if (errors.length) {
+      throw errors.pop();
     }
     return object;
   }
@@ -33,15 +34,21 @@ export class UserService {
 
     // bcrypt has no types :\
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-    const hashedPassword = (await bcypt.hash(password, 10)) as string;
+    const hashedPassword = (await bcypt.hash(
+      password,
+      Constants.auth.passwordSaltLength,
+    )) as string;
 
     const userToRegister: Partial<User> = {
       email: lowerCaseEmail,
-      passwordHash: Buffer.alloc(60, hashedPassword),
+      passwordHash: Buffer.alloc(
+        Constants.auth.hashedPasswordLength,
+        hashedPassword,
+      ),
     };
 
     return this.userRepository.insert(userToRegister).then(async (result) => {
-      if (result.identifiers.length === 0) {
+      if (!result.identifiers.length) {
         Logger.error(
           'Failed to persist new user to database (no identifiers returned)',
           null,
@@ -55,7 +62,7 @@ export class UserService {
         // We need to add the generated map to the current user, then transform
         // and validate
         user = await this.toUser(
-          Object.assign(userToRegister, result.generatedMaps[0]),
+          Object.assign(userToRegister, result.generatedMaps.pop()),
         );
       } catch (err) {
         // If there was an error converting the returned generated maps into

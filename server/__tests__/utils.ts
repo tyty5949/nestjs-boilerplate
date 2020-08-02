@@ -11,6 +11,7 @@ import * as session from 'express-session';
 import { TypeormStore } from 'connect-typeorm';
 import * as passport from 'passport';
 import { getConnection, getRepository } from 'typeorm';
+import { Constants } from '../utils/constants';
 
 /**
  * Helper function for tests which attempts authentication using
@@ -31,8 +32,10 @@ export const authenticateAgent = (
   return agent
     .post('/api/auth/login')
     .send({ email, password })
-    .expect(302)
-    .then(() => agent);
+    .expect(Constants.http.HTTP_STATUS_FOUND)
+    .then(() => {
+      return agent;
+    });
 };
 
 export const createTestingNestApplication = async (): Promise<
@@ -60,8 +63,7 @@ export const createTestingNestApplication = async (): Promise<
       rolling: true,
       cookie: {
         httpOnly: true,
-        // Session cookie is valid for 6 hours
-        maxAge: 1000 * 60 * 60 * 6,
+        maxAge: Constants.app.maxSessionAge,
       },
       store: new TypeormStore({
         // For each new session, attempts to remove 10 expired sessions
@@ -76,7 +78,7 @@ export const createTestingNestApplication = async (): Promise<
   app.use(passport.initialize());
   app.use(passport.session());
 
-  //applyNestApplicationMiddleware(app);
+  // applyNestApplicationMiddleware(app);
   return app.init();
 };
 
@@ -88,5 +90,6 @@ export const closeTestingNestApplication = (
     if (conn.isConnected) {
       return conn.close();
     }
+    return Promise.resolve();
   });
 };

@@ -21,6 +21,7 @@ import * as passport from 'passport';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
 import { Session } from './domain/auth/entities/session.entity';
+import { Constants } from './utils/constants';
 
 const applyNestApplicationMiddleware = (app: INestApplication): void => {
   // Must come before other calls to app.use() or setup functions that may call app.use()
@@ -43,8 +44,7 @@ const applyNestApplicationMiddleware = (app: INestApplication): void => {
       rolling: true,
       cookie: {
         httpOnly: true,
-        // Session cookie is valid for 6 hours
-        maxAge: 1000 * 60 * 60 * 6,
+        maxAge: Constants.app.maxSessionAge,
       },
       store: new TypeormStore({
         // For each new session, attempts to remove 10 expired sessions
