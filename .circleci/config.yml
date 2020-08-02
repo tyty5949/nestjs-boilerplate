@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - run: npm install
-      - run: npm run db:up
+      - run: npm run migrate:up
       - run: npm run lint
       - run: npm run build
       - run: npm run test:cov
