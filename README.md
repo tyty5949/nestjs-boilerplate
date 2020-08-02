@@ -27,8 +27,7 @@
   - [Required software](#required-software)
   - [Running for the first time](#running-for-the-first-time)
 - [TypeORM & Database](#typeorm-and-database)
-- [Useful Commands](#useful-commands)
-  - [Database](#database)
+  - [Useful Commands](#useful-database-commands)
 - [Stay in touch](#stay-in-touch)
 - [License](#license)
 
@@ -82,9 +81,7 @@ npm run test
 
 This boilerplate takes advantage of NestJS's integration with TypeORM. More information can be found [here](https://docs.nestjs.com/techniques/database#typeorm-integration).
 
-### Useful Commands
-
-#### Database
+### Useful Database Commands
 - `npm run db:up` - Starts the local MySQL database instance using Docker.
 - `npm run db:stop` - Stops the local MySQL database instance using Docker.
 - `npm run migrate:up` - Runs pending migrations on your local database. See more info [here](https://typeorm.io/#/migrations).
