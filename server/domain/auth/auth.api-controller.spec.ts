@@ -16,7 +16,7 @@ describe('AuthApiController', () => {
   beforeEach(() => {
     mockUserService = {
       getHistoryObject: () => {
-        return {}; 
+        return {};
       },
     } as Partial<UserService>;
     authApiController = new AuthApiController(

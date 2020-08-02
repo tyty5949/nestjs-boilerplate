@@ -68,19 +68,17 @@ export class AuthApiController {
     );
 
     if (!user) {
-      this.logger.error(
-        'Error registering user (user is null)',
-        { email: registerDto.email },
-      );
+      this.logger.error('Error registering user (user is null)', {
+        email: registerDto.email,
+      });
       throw new InternalServerErrorException();
     }
 
     req.logIn(user, (err) => {
       if (err) {
-        this.logger.error(
-          'Error logging user in after registration',
-          { user: this.userService.getHistoryObject(user) },
-        );
+        this.logger.error('Error logging user in after registration', {
+          user: this.userService.getHistoryObject(user),
+        });
         throw new InternalServerErrorException();
       }
 
