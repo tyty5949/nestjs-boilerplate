@@ -3,25 +3,21 @@ import * as bcypt from 'bcrypt';
 import { validate } from 'class-validator';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
-import { plainToClass } from 'class-transformer';
-import { UserHistoryObject } from './interfaces/userHistoryObject';
+import { plainToClass, serialize } from 'class-transformer';
 
 @Injectable()
 export class UserService {
   constructor(private logger: Logger, private userRepository: UserRepository) {}
 
-  getHistoryObject(user: User): UserHistoryObject {
-    return {
-      id: user.id,
-      accountId: user.accountId,
-      email: user.email,
-      updatedAt: user.updatedAt,
-      deletedAt: user.deletedAt,
-    };
+  getHistoryJSON(user: User): string {
+    return serialize(user, { excludeExtraneousValues: true });
   }
 
   async toUser(value: Record<string, unknown>): Promise<User> {
-    const object = plainToClass(User, value);
+    const object = plainToClass(User, value, {
+      excludeExtraneousValues: true,
+      enableImplicitConversion: true,
+    });
     const errors = await validate(object);
     if (errors.length > 0) {
       throw errors[0];
