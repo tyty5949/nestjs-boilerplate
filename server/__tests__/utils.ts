@@ -1,5 +1,5 @@
 // dotenv doesn't have types :\
-// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
+// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-var-requires
 require('dotenv').config();
 
 import supertest from 'supertest';
@@ -11,7 +11,6 @@ import * as session from 'express-session';
 import { TypeormStore } from 'connect-typeorm';
 import * as passport from 'passport';
 import { getConnection, getRepository } from 'typeorm';
-
 
 /**
  * Helper function for tests which attempts authentication using
@@ -36,7 +35,9 @@ export const authenticateAgent = (
     .then(() => agent);
 };
 
-export const createTestingNestApplication = async (): Promise<INestApplication> => {
+export const createTestingNestApplication = async (): Promise<
+  INestApplication
+> => {
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
@@ -82,11 +83,10 @@ export const createTestingNestApplication = async (): Promise<INestApplication> 
 export const closeTestingNestApplication = (
   app: INestApplication,
 ): Promise<void> => {
-  return app.close()
-  .then(() => {
+  return app.close().then(() => {
     const conn = getConnection();
     if (conn.isConnected) {
       return conn.close();
     }
-  })
-}
+  });
+};

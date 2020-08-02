@@ -44,7 +44,7 @@ export class UserService {
       passwordHash: Buffer.alloc(60, hashedPassword),
     };
 
-    return this.userRepository.insert(userToRegister).then(async result => {
+    return this.userRepository.insert(userToRegister).then(async (result) => {
       if (result.identifiers.length === 0) {
         throw new Error(
           'Failed to persist new user to database! (no identifiers returned)',

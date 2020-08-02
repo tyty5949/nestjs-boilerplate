@@ -1,6 +1,10 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
-import { authenticateAgent, closeTestingNestApplication, createTestingNestApplication } from '../utils';
+import {
+  authenticateAgent,
+  closeTestingNestApplication,
+  createTestingNestApplication,
+} from '../utils';
 import { getConnection } from 'typeorm';
 
 describe('AuthController (e2e)', () => {
@@ -30,7 +34,7 @@ describe('AuthController (e2e)', () => {
         .expect('set-cookie', /user_session=/);
     });
 
-    it('should not login user with incorrect credentials',  async () => {
+    it('should not login user with incorrect credentials', async () => {
       await agent
         .post('/api/auth/login')
         .send({ email: 'test@qa.com', password: 'wrong_password' })
@@ -38,7 +42,7 @@ describe('AuthController (e2e)', () => {
     });
   });
 
-  it('/api/auth/logout (POST)',  async() => {
+  it('/api/auth/logout (POST)', async () => {
     await authenticateAgent(agent, 'test@qa.com', 'password');
 
     await agent
@@ -46,17 +50,18 @@ describe('AuthController (e2e)', () => {
       .expect(302, 'Found. Redirecting to /login')
       .expect('location', '/login');
 
-    await agent.get('/api/auth/me')
+    await agent
+      .get('/api/auth/me')
       .expect(403)
-      .expect(`{"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}`);
+      .expect(
+        `{"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}`,
+      );
   });
 
-  it('/api/auth/me (GET)',  async () => {
+  it('/api/auth/me (GET)', async () => {
     await authenticateAgent(agent, 'test@qa.com', 'password');
 
-    await agent.get('/api/auth/me')
-      .expect('Content-Type', /json/)
-      .expect(200);
+    await agent.get('/api/auth/me').expect('Content-Type', /json/).expect(200);
   });
 });
 
