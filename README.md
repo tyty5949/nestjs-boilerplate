@@ -11,7 +11,7 @@
 [travis-url]: https://travis-ci.org/nestjs/nest
 [linux-image]: https://img.shields.io/travis/nestjs/nest/master.svg?label=linux
 [linux-url]: https://travis-ci.org/nestjs/nest
-  
+
 <p align="center">Yet another full-stack Nest.js boilerplate repo but this time with TypeORM, Passport Authentication, Handlebars, and React!</p>
 <p align="center">
   <a href="https://www.npmjs.com/"><img src="https://img.shields.io/npm/v/@nestjs/core.sv" alt="NPM Version" /></a>
