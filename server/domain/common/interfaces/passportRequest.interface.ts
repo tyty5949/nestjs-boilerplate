@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { User } from '../../user/user.entity';
 import { ISession } from 'connect-typeorm';
-import { SessionUser } from '../../auth/models/sessionUser';
+import { SessionUser } from '../../auth/types/sessionUser';
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 interface PassportSession extends ISession, Express.Session {
@@ -12,9 +12,9 @@ interface PassportSession extends ISession, Express.Session {
 
 /*
  * The global type defined in @types/passport is being overridden
- * by node.js's global Request type...
+ * by node.js's global Request type... so we had to write our own.
  *
- * This is copied from @types/passport...
+ * This is mostly copied from @types/passport.
  * @see https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/passport/index.d.ts
  */
 export interface PassportRequest extends Request {
