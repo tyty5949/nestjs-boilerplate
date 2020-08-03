@@ -3,7 +3,7 @@
 require('dotenv').config();
 
 import supertest from 'supertest';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../app.module';
 import { Session } from '../domain/auth/entities/session.entity';
@@ -12,6 +12,9 @@ import { TypeormStore } from 'connect-typeorm';
 import * as passport from 'passport';
 import { getConnection, getRepository } from 'typeorm';
 import { Constants } from '../utils/constants';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { loadPartials } from '../utils/hbs';
 
 /**
  * Helper function for tests which attempts authentication using
@@ -39,13 +42,13 @@ export const authenticateAgent = (
 };
 
 export const createTestingNestApplication = async (): Promise<
-  INestApplication
+  NestExpressApplication
 > => {
   const moduleRef = await Test.createTestingModule({
     imports: [AppModule],
   }).compile();
 
-  const app = moduleRef.createNestApplication();
+  const app = moduleRef.createNestApplication<NestExpressApplication>();
 
   // Sets up the express-session for use in nestjs
   // Session data is also persisted to the database using TypeORM
@@ -77,6 +80,16 @@ export const createTestingNestApplication = async (): Promise<
   // Initialize passport for handling auth within our nestjs app
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Set the view engine to use Handlebars
+  app.setBaseViewsDir(join(__dirname, 'views'));
+  app.setViewEngine('hbs');
+
+  // Load hbs partials from common directory
+  loadPartials('common');
+
+  // Use a global validator for requests
+  app.useGlobalPipes(new ValidationPipe());
 
   // applyNestApplicationMiddleware(app);
   return app.init();

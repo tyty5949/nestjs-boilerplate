@@ -6,7 +6,7 @@
  * can happen before importing modules that depend on variables
  * from the .env file.
  */
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 
 if (process.env.NODE_ENV !== 'production') {
   // dotenv doesn't have types :\
@@ -22,11 +22,18 @@ import * as session from 'express-session';
 import * as helmet from 'helmet';
 import { Session } from './domain/auth/entities/session.entity';
 import { Constants } from './utils/constants';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { loadPartials } from './utils/hbs';
 
-const applyNestApplicationMiddleware = (app: INestApplication): void => {
+const applyNestApplicationMiddleware = (app: NestExpressApplication): void => {
   // Must come before other calls to app.use() or setup functions that may call app.use()
   // @see https://docs.nestjs.com/techniques/security#helmet
   app.use(helmet());
+
+  // Set the view engine to use Handlebars
+  app.setBaseViewsDir(join(__dirname, 'views'));
+  app.setViewEngine('hbs');
 
   // Sets up the express-session for use in nestjs
   // Session data is also persisted to the database using TypeORM
@@ -58,13 +65,19 @@ const applyNestApplicationMiddleware = (app: INestApplication): void => {
   // Initialize passport for handling auth within our nestjs app
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Use a global validator for requests
+  app.useGlobalPipes(new ValidationPipe());
 };
 
-const bootstrap = async (): Promise<INestApplication> => {
-  const app = await NestFactory.create(AppModule);
+const bootstrap = async (): Promise<NestExpressApplication> => {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Apply middleware to the application
   applyNestApplicationMiddleware(app);
+
+  // Load hbs partials from common directory
+  loadPartials('common');
 
   // Finally, start the server
   await app.listen(process.env.NEST_PORT);

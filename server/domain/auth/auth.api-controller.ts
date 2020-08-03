@@ -17,6 +17,7 @@ import { AuthMeResponse } from './interfaces/authMeResponse.interface';
 import { UserService } from '../user/user.service';
 import { RegisterDTO } from './models/register.dto';
 import { Logger } from '../common/logger';
+import { AuthLoginResponse } from './interfaces/authLoginResponse.interface';
 
 @Controller('/api/auth')
 export class AuthApiController {
@@ -40,8 +41,11 @@ export class AuthApiController {
 
   @UseGuards(LoginGuard)
   @Post('/login')
-  login(@Res() res: Response): void {
-    res.redirect('/app/home');
+  login(): AuthLoginResponse {
+    return {
+      success: true,
+      redirect: '/app/home',
+    };
   }
 
   @UseGuards(AuthenticatedGuard)
