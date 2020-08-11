@@ -16,7 +16,7 @@ export class AuthController {
   @Render('auth/login')
   login(@Req() req: PassportRequest, @Res() res: Response): unknown {
     if (req.isAuthenticated()) {
-      return res.redirect('/app/home');
+      return res.redirect('/home');
     }
 
     return {
@@ -29,7 +29,7 @@ export class AuthController {
   @Render('auth/register')
   register(@Req() req: PassportRequest, @Res() res: Response): unknown {
     if (req.isAuthenticated()) {
-      return res.redirect('/app/home');
+      return res.redirect('/home');
     }
 
     return {
