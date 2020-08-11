@@ -3,6 +3,8 @@ import { UserService } from './user.service';
 import { getMockUser } from '../../__tests__/__mocks__/user';
 import { UserRepository } from './user.repository';
 import { getLogger } from '../common/logger';
+import { getMockConfigService } from '../../__tests__/__mocks__/configService';
+import { ConfigService } from '@nestjs/config';
 
 describe('UserService', () => {
   let userService: UserService;
@@ -11,9 +13,11 @@ describe('UserService', () => {
 
   beforeEach(() => {
     mockUserRepository = getMockUserRepository();
+    const mockConfigService = getMockConfigService();
     userService = new UserService(
       getLogger(),
       mockUserRepository as UserRepository,
+      mockConfigService as ConfigService,
     );
   });
 

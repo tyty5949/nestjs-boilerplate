@@ -21,6 +21,8 @@ import { AuthMeResponse } from '../types/responses/authMe.response';
 import { LoginDTO } from '../types/login.dto';
 import { RegisterDTO } from '../types/register.dto';
 import { RegisterResponse } from '../types/responses/register.response';
+import { UserRepository } from '../../user/user.repository';
+import { RecaptchaGuard } from '../guards/recaptcha.guard';
 
 @Controller('/api/auth')
 export class AuthApiController {
@@ -41,6 +43,7 @@ export class AuthApiController {
   constructor(
     protected logger: Logger,
     protected userService: UserService,
+    protected userRepository: UserRepository,
     protected authService: AuthService,
   ) {}
 
@@ -60,6 +63,7 @@ export class AuthApiController {
     };
   }
 
+  @UseGuards(RecaptchaGuard)
   @Post('/login')
   async login(
     @Req() req: PassportRequest,
@@ -93,6 +97,7 @@ export class AuthApiController {
     res.redirect('/login');
   }
 
+  @UseGuards(RecaptchaGuard)
   @Post('/register')
   async register(
     @Req() req: PassportRequest,
@@ -102,7 +107,20 @@ export class AuthApiController {
       return this.registerSuccessResponse;
     }
 
-    // Attempt to register the user given their desired credentials
+    /*
+     * Attempt to lookup a user with the desired email to verify that
+     * and account doesn't already exist.
+     */
+    const foundUser = await this.userRepository.findOneByEmail(
+      registerDto.email.toLowerCase(),
+    );
+    if (foundUser) {
+      return this.buildRegisterFailureResponse(
+        'An account with that email already exists!',
+      );
+    }
+
+    // Attempt to register the user with their desired credentials
     const user = await this.registerUserOrFail(registerDto);
 
     /*
@@ -110,7 +128,7 @@ export class AuthApiController {
      * so that their session gets created.
      */
     await this.logInUserOrFail(req, user);
-    
+
     return this.registerSuccessResponse;
   }
 
@@ -154,5 +172,12 @@ export class AuthApiController {
     }
 
     return user;
+  }
+
+  buildRegisterFailureResponse(reason: string): RegisterResponse {
+    return {
+      success: false,
+      failureReason: reason,
+    } as RegisterResponse;
   }
 }

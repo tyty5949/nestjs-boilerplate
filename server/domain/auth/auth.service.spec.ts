@@ -1,6 +1,7 @@
 import { AuthService } from './auth.service';
 import { getMockUser } from '../../__tests__/__mocks__/user';
 import { User } from '../user/user.entity';
+import { getMockUserRepository } from '../../__tests__/__mocks__/domain/user/userRepository';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -9,7 +10,7 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     mockUser = getMockUser({ email: 'test@qa.com', password: 'password' });
-    mockUserRepository = getMockUserRepository(mockUser);
+    mockUserRepository = getMockUserRepository([mockUser]);
     authService = new AuthService(mockUserRepository);
   });
 
@@ -67,14 +68,3 @@ describe('AuthService', () => {
     });
   });
 });
-
-const getMockUserRepository = (mockUser: User) => {
-  return {
-    findOneByEmail: jest.fn().mockImplementation((email) => {
-      if (email === mockUser.email) {
-        return Promise.resolve(mockUser);
-      }
-      return Promise.resolve(undefined);
-    }),
-  };
-};

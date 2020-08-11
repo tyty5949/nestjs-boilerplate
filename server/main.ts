@@ -1,18 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/*
- * Only initialize dotenv if we aren't in production.
- *
- * NOTE: This had to be hoisted to the top so that the config
- * can happen before importing modules that depend on variables
- * from the .env file.
- */
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-
-if (process.env.NODE_ENV !== 'production') {
-  // dotenv doesn't have types :\
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-var-requires
-  require('dotenv').config();
-}
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { getRepository } from 'typeorm';
@@ -21,25 +6,37 @@ import * as passport from 'passport';
 import * as session from 'express-session';
 import * as helmet from 'helmet';
 import { Session } from './domain/auth/entities/session.entity';
-import { Constants } from './utils/constants';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { loadPartials } from './utils/hbs';
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { AppConfig } from './config';
 
-const applyNestApplicationMiddleware = (app: NestExpressApplication): void => {
-  // Must come before other calls to app.use() or setup functions that may call app.use()
-  // @see https://docs.nestjs.com/techniques/security#helmet
+export const applyNestApplicationMiddleware = (
+  app: NestExpressApplication,
+): void => {
+  const configService = app.get(ConfigService);
+
+  /*
+   * Must come before other calls to app.use() or setup functions that may call app.use()
+   * @see https://docs.nestjs.com/techniques/security#helmet
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(helmet());
 
   // Set the view engine to use Handlebars
   app.setBaseViewsDir(join(__dirname, 'views'));
   app.setViewEngine('hbs');
 
-  // Sets up the express-session for use in nestjs
-  // Session data is also persisted to the database using TypeORM
-  // so that is setup here as well.
-  // @see https://github.com/expressjs/session#readme
-  // @see https://github.com/nykula/connect-typeorm#readme
+  /*
+   * Sets up the express-session for use in nestjs.
+   * @see https://github.com/expressjs/session#readme
+   *
+   * Session data is also persisted to the database using TypeORM
+   * so that is setup here as well.
+   * @see https://github.com/nykula/connect-typeorm#readme
+   */
   const sessionRepository = getRepository(Session);
   app.use(
     session({
@@ -51,7 +48,7 @@ const applyNestApplicationMiddleware = (app: NestExpressApplication): void => {
       rolling: true,
       cookie: {
         httpOnly: true,
-        maxAge: Constants.app.maxSessionAge,
+        maxAge: configService.get<AppConfig>('app').maxSessionAge,
       },
       store: new TypeormStore({
         // For each new session, attempts to remove 10 expired sessions
@@ -76,10 +73,10 @@ const bootstrap = async (): Promise<NestExpressApplication> => {
   // Apply middleware to the application
   applyNestApplicationMiddleware(app);
 
-  // Load hbs partials from common directory
-  loadPartials('common');
+  // Load handlebars partials from the /views/common directory
+  loadPartials('/views/common');
 
-  // Finally, start the server
+  // Finally, start the server!
   await app.listen(process.env.NEST_PORT);
   return app;
 };

@@ -9,15 +9,23 @@ describe('AuthenticatedGuard', () => {
   });
 
   it('should not activate if not authenticated', () => {
-    const mockContext = getMockExecutionContext(false);
+    const mockContext = getNonAuthenticatedExecutionContext();
     expect(authenticatedGuard.canActivate(mockContext)).toBe(false);
   });
 
   it('should activate if authenticated', () => {
-    const mockContext = getMockExecutionContext(true);
+    const mockContext = getAuthenticatedExecutionContext();
     expect(authenticatedGuard.canActivate(mockContext)).toBe(true);
   });
 });
+
+const getNonAuthenticatedExecutionContext = () => {
+  return getMockExecutionContext(false);
+};
+
+const getAuthenticatedExecutionContext = () => {
+  return getMockExecutionContext(true);
+};
 
 const getMockExecutionContext = (
   isAuthenticated: boolean,

@@ -1,10 +1,12 @@
 import { AuthApiController } from './auth.api-controller';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Response } from 'express';
-import { RegisterDTO } from './models/register.dto';
+import { RegisterDTO } from '../types/register.dto';
 import { PassportRequest } from '../../common/interfaces/passportRequest.interface';
 import { UserService } from '../../user/user.service';
 import { getLogger } from '../../common/logger';
+import { UserRepository } from '../../user/user.repository';
+import { AuthService } from '../auth.service';
 
 describe('AuthApiController', () => {
   let authApiController: AuthApiController;
@@ -19,14 +21,14 @@ describe('AuthApiController', () => {
         return {};
       },
     } as Partial<UserService>;
+
     authApiController = new AuthApiController(
       getLogger(),
       mockUserService as UserService,
+      {} as UserRepository,
+      {} as AuthService,
     );
-
     mockReq = {} as PassportRequest;
-    mockRes = {} as Response;
-    mockBody = {} as RegisterDTO;
   });
 
   describe('#me()', () => {
@@ -54,91 +56,10 @@ describe('AuthApiController', () => {
   });
 
   describe('#login()', () => {
-    it('should redirect to /app/home after login guard', () => {
-      mockRes.redirect = jest.fn();
-      authApiController.login(mockRes);
-      expect(mockRes.redirect).toHaveBeenCalledWith('/app/home');
-    });
+    // TODO
   });
 
   describe('#logout()', () => {
-    it('should attempt to logout the user', () => {
-      mockReq.logout = jest.fn();
-      mockRes.redirect = jest.fn();
-      authApiController.logout(mockReq, mockRes);
-      expect(mockReq.logout).toHaveBeenCalled();
-    });
-
-    it('should redirect to /login after successfully logging out the user', () => {
-      mockReq.logout = jest.fn();
-      mockRes.redirect = jest.fn();
-      authApiController.logout(mockReq, mockRes);
-      expect(mockRes.redirect).toHaveBeenCalledWith('/login');
-    });
-  });
-
-  describe('#register()', () => {
-    it('should redirect to /app/home if user is already authenticated', async () => {
-      mockReq.isAuthenticated = jest.fn().mockReturnValue(true);
-      mockRes.redirect = jest.fn();
-      mockUserService.registerUser = jest.fn();
-
-      await authApiController.register(mockReq, mockRes, mockBody);
-
-      expect(mockRes.redirect).toHaveBeenCalledWith('/app/home');
-      expect(mockUserService.registerUser).not.toHaveBeenCalled();
-    });
-
-    it('should throw internal error if issue registering user', async () => {
-      mockReq.isAuthenticated = jest.fn().mockReturnValue(false);
-      mockUserService.registerUser = jest.fn().mockResolvedValue(undefined);
-
-      await expect(() => {
-        return authApiController.register(mockReq, mockRes, mockBody);
-      }).rejects.toThrow(InternalServerErrorException);
-    });
-
-    it('should attempt login if user is registered', async () => {
-      mockReq.isAuthenticated = jest.fn().mockReturnValue(false);
-      mockReq.logIn = jest.fn();
-      const mockUser = { id: 1234 };
-      mockUserService.registerUser = jest.fn().mockResolvedValue(mockUser);
-
-      await authApiController.register(mockReq, mockRes, mockBody);
-
-      expect(mockReq.logIn).toHaveBeenCalledWith(mockUser, expect.anything());
-    });
-
-    it('should throw internal error if login fails', async () => {
-      mockReq.isAuthenticated = jest.fn().mockReturnValue(false);
-      mockReq.logIn = jest
-        .fn()
-        .mockImplementation((user, cb: (err) => void) => {
-          return cb(new Error('There was an error!'));
-        });
-      const mockUser = { id: 1234 };
-      mockUserService.registerUser = jest.fn().mockResolvedValue(mockUser);
-
-      await expect(() => {
-        return authApiController.register(mockReq, mockRes, mockBody);
-      }).rejects.toThrow(InternalServerErrorException);
-    });
-
-    it('should redirect to /app/home after successful registration', async () => {
-      mockRes.redirect = jest.fn();
-      mockReq.isAuthenticated = jest.fn().mockReturnValue(false);
-      mockReq.logIn = jest
-        .fn()
-        .mockImplementation((user, cb: (err) => void) => {
-          return cb(null);
-        });
-      const mockUser = { id: 1234 };
-      mockUserService.registerUser = jest.fn().mockResolvedValue(mockUser);
-
-      await authApiController.register(mockReq, mockRes, mockBody);
-
-      expect(mockRes.redirect).toHaveBeenCalledWith('/app/home');
-      expect(mockReq.logIn).toHaveBeenCalled();
-    });
+    // TODO
   });
 });

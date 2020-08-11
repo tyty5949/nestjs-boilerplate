@@ -4,12 +4,17 @@ import { validate } from 'class-validator';
 import { User } from './user.entity';
 import { UserRepository } from './user.repository';
 import { classToPlain, plainToClass } from 'class-transformer';
-import { Constants } from '../../utils/constants';
 import { Logger } from '../common/logger';
+import { ConfigService } from '@nestjs/config';
+import { AuthConfig } from '../../config';
 
 @Injectable()
 export class UserService {
-  constructor(private logger: Logger, private userRepository: UserRepository) {}
+  constructor(
+    private logger: Logger,
+    private userRepository: UserRepository,
+    private configService: ConfigService,
+  ) {}
 
   getHistoryObject(user: Partial<User>): Record<string, unknown> {
     return classToPlain(user, { excludeExtraneousValues: true });
@@ -37,13 +42,13 @@ export class UserService {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
     const hashedPassword = (await bcypt.hash(
       password,
-      Constants.auth.passwordSaltLength,
+      this.configService.get<AuthConfig>('auth').passwordSaltLength,
     )) as string;
 
     const userToRegister: Partial<User> = {
       email: lowerCaseEmail,
       passwordHash: Buffer.alloc(
-        Constants.auth.hashedPasswordLength,
+        this.configService.get<AuthConfig>('auth').hashedPasswordLength,
         hashedPassword,
       ),
     };

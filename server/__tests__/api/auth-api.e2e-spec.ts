@@ -6,7 +6,7 @@ import {
   createTestingNestApplication,
 } from '../utils';
 import { getConnection } from 'typeorm';
-import { Constants } from '../../utils/constants';
+import { constants as HttpConstants } from 'http2';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
@@ -31,7 +31,7 @@ describe('AuthController (e2e)', () => {
         .post('/api/auth/login')
         .send({ email: 'test@qa.com', password: 'password' })
         .expect(
-          Constants.http.HTTP_STATUS_FOUND,
+          HttpConstants.HTTP_STATUS_FOUND,
           'Found. Redirecting to /app/home',
         )
         .expect('location', '/app/home')
@@ -43,7 +43,7 @@ describe('AuthController (e2e)', () => {
         .post('/api/auth/login')
         .send({ email: 'test@qa.com', password: 'wrong_password' })
         .expect(
-          Constants.http.HTTP_STATUS_UNAUTHORIZED,
+          HttpConstants.HTTP_STATUS_UNAUTHORIZED,
           '{"statusCode":401,"message":"Unauthorized"}',
         );
     });
@@ -55,15 +55,12 @@ describe('AuthController (e2e)', () => {
 
       await agent
         .post('/api/auth/logout')
-        .expect(
-          Constants.http.HTTP_STATUS_FOUND,
-          'Found. Redirecting to /login',
-        )
+        .expect(HttpConstants.HTTP_STATUS_FOUND, 'Found. Redirecting to /login')
         .expect('location', '/login');
 
       await agent
         .get('/api/auth/me')
-        .expect(Constants.http.HTTP_STATUS_FORBIDDEN)
+        .expect(HttpConstants.HTTP_STATUS_FORBIDDEN)
         .expect(
           '{"statusCode":403,"message":"Forbidden resource","error":"Forbidden"}',
         );
@@ -76,7 +73,7 @@ describe('AuthController (e2e)', () => {
 
       await agent
         .get('/api/auth/me')
-        .expect(Constants.http.HTTP_STATUS_OK)
+        .expect(HttpConstants.HTTP_STATUS_OK)
         .expect('Content-Type', /json/);
     });
   });
@@ -89,7 +86,7 @@ describe('AuthController (e2e)', () => {
         .post('/api/auth/register')
         .send({})
         .expect(
-          Constants.http.HTTP_STATUS_FOUND,
+          HttpConstants.HTTP_STATUS_FOUND,
           'Found. Redirecting to /app/home',
         )
         .expect('location', '/app/home');
@@ -100,7 +97,7 @@ describe('AuthController (e2e)', () => {
         .post('/api/auth/register')
         .send({ email: 'register_user@qa.com', password: 'password' })
         .expect(
-          Constants.http.HTTP_STATUS_FOUND,
+          HttpConstants.HTTP_STATUS_FOUND,
           'Found. Redirecting to /app/home',
         )
         .expect('location', '/app/home')
@@ -108,7 +105,7 @@ describe('AuthController (e2e)', () => {
 
       await agent
         .get('/api/auth/me')
-        .expect(Constants.http.HTTP_STATUS_OK)
+        .expect(HttpConstants.HTTP_STATUS_OK)
         .expect('Content-Type', /json/)
         .then((res) => {
           expect(res.body).toMatchObject({ email: 'register_user@qa.com' });
