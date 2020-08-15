@@ -4,9 +4,10 @@ module.exports = {
     project: 'tsconfig.json',
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin'],
+  plugins: ['react', '@typescript-eslint/eslint-plugin'],
   extends: [
     'eslint:recommended',
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
     'prettier',
@@ -16,6 +17,7 @@ module.exports = {
   env: {
     node: true,
     jest: true,
+    browser: true,
   },
   rules: {
     // Possible errors

@@ -2,7 +2,9 @@
   pageTitle='Home'
 }}
   {{#*inline "head"}}
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.5.3/antd.min.js" integrity="sha512-lDXu2bhzuMhMzWtkw784dzyHSWsLmI/SuQC44nmTn/6pWZ5MrYTY9k8MJccnuQXzToP7ynlCkDIARSlDgm4XXg==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/antd/4.5.3/default-theme.min.js" integrity="sha512-WchpnU12ezz/FAgx3jWrdXaLjESOxFEkJwuuUauwrVn+PA2EEdXM7px+0qB5bGW42/MBEsGd0SSHk8AK57ftGQ==" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/4.5.3/antd.min.css" integrity="sha512-EUY9knhAJ5AewSxtkyS8YMA0dC69CB6W7y+HmyC+wV0KRMrhvKmtwV2hPb50WsI6ukHYMmvUpjHpfzLMthdAhQ==" crossorigin="anonymous" />
   {{/inline}}
 
   {{#*inline "preBody"}}
@@ -10,7 +12,7 @@
   {{/inline}}
 
   {{#*inline "content"}}
-    <h1>Hello world!</h1>
+    {{{ app }}}
   {{/inline}}
 
   {{#*inline "postBody"}}

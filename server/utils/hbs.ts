@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as hbs from 'hbs';
+import fs from 'fs';
+import path from 'path';
+import hbs from 'hbs';
 
 export const loadPartials = (pathName: string): void => {
   const partialsDir = path.join(__dirname, '..', pathName);
